@@ -13,7 +13,7 @@ public class Configuration: NSObject {
     let CurrentConfigurationPlistKey = "Configuration"
     
     public private(set) var configurationName: String?
-    private var dictionary: NSDictionary!
+    public var dictionary = [String: Any]()
     
     public static func defaultConfiguration() -> Configuration {
         struct Static {
@@ -37,13 +37,17 @@ public class Configuration: NSObject {
         let plistPath = bundle.path(forResource: plistName, ofType: "plist")
         let dictionary = NSDictionary(contentsOfFile: plistPath!)
         
-        self.dictionary = dictionary?.value(forKey: self.configurationName!) as? NSDictionary
+        self.dictionary = dictionary?.value(forKey: self.configurationName!) as! [String : Any]
     }
     
     public subscript(key: String) -> AnyObject? {
         get {
-            return self.dictionary.value(forKey: key) as AnyObject
+            return self.dictionary[key] as AnyObject
+        }
+        set {
+            self.dictionary[key] = newValue
         }
     }
 
 }
+
